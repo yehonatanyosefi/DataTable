@@ -1,12 +1,11 @@
 import { useState, useEffect, useRef } from 'react'
 
-export default function DataTable({ tableData, handleTableDataChange }) {
+export default function DataTable({ tableData, handleTableDataChange, handleColWidthChange }) {
 	const [rowData, setRowData] = useState([])
 	const [colWidths, setColWidths] = useState(
 		tableData.columns.reduce((acc, col) => ({ ...acc, [col.id]: col.width }), {})
 	)
 	const [dragging, setDragging] = useState({ columnId: null, startX: 0 })
-	const headerRef = useRef(null)
 
 	const gridTemplateColumns = tableData.columns.map((col) => `${colWidths[col.id] || '240'}px`).join(' ')
 
@@ -20,6 +19,7 @@ export default function DataTable({ tableData, handleTableDataChange }) {
 			const newWidth = Math.max(colWidths[dragging.columnId] + deltaX, 50)
 			setColWidths((prev) => ({ ...prev, [dragging.columnId]: newWidth }))
 			setDragging((prev) => ({ ...prev, startX: e.pageX }))
+			handleColWidthChange(dragging.columnId, newWidth)
 		}
 	}
 
@@ -56,7 +56,7 @@ export default function DataTable({ tableData, handleTableDataChange }) {
 		})
 	}
 
-	const handleBlur = (rowId) => {
+	const handleBlur = () => {
 		handleTableDataChange({
 			...tableData,
 			data: rowData,
@@ -65,7 +65,7 @@ export default function DataTable({ tableData, handleTableDataChange }) {
 
 	return (
 		<div className="data-table">
-			<div ref={headerRef} className="grid-header" style={{ gridTemplateColumns }}>
+			<div className="grid-header" style={{ gridTemplateColumns }}>
 				{tableData.columns.map((column) => (
 					<div key={column.id} className="grid-cell" style={{ position: 'relative' }}>
 						{column.title}
@@ -93,6 +93,7 @@ export default function DataTable({ tableData, handleTableDataChange }) {
 									value={row[column.id] || ''}
 									onChange={(e) => handleInputChange(e, row.id, column.id)}
 									onBlur={() => handleBlur(row.id)}
+									title={row[column.id] || ''}
 								/>
 							</div>
 						))}

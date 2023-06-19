@@ -6,7 +6,6 @@
 	.grid-header,
 	.grid-row {
 		display: grid;
-		// grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 	}
 
 	.grid-header {
@@ -29,6 +28,9 @@
 		padding: 8px;
 		outline: none;
 		color: #4b4b4b;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 
 		&:hover {
 			box-shadow: 0px 0px 1px #bdbdbd;

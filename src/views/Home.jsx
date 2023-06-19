@@ -49,9 +49,33 @@ const Home = () => {
 
 	const [isModalOpen, setModalOpen] = useState(false)
 
+	const saveTableData = (newTableData) => {
+		localStorage.setItem('tableData', JSON.stringify(newTableData))
+	}
+
 	const handleTableDataChange = (newData) => {
 		setTableData(newData)
-		localStorage.setItem('tableData', JSON.stringify(newData))
+		saveTableData(newData)
+	}
+
+	const handleColWidthChange = (columnId, newWidth) => {
+		setTableData((prevTableData) => {
+			const newTableData = {
+				...prevTableData,
+				columns: prevTableData.columns.map((col) => {
+					if (col.id === columnId) {
+						return {
+							...col,
+							width: newWidth,
+						}
+					} else {
+						return col
+					}
+				}),
+			}
+			saveTableData(newTableData)
+			return newTableData
+		})
 	}
 
 	// const ordinalNo = Math.max(...tableData.data.map((d) => +d.ordinalNo), 0) + 1 //TODO add column
@@ -70,7 +94,11 @@ const Home = () => {
 	return (
 		<div className="App">
 			<button onClick={() => setModalOpen(true)}>Add Data</button>
-			<DataTable tableData={tableData} handleTableDataChange={handleTableDataChange} />
+			<DataTable
+				tableData={tableData}
+				handleTableDataChange={handleTableDataChange}
+				handleColWidthChange={handleColWidthChange}
+			/>
 			<AddDataForm
 				isOpen={isModalOpen}
 				onRequestClose={() => setModalOpen(false)}
