@@ -1,0 +1,49 @@
+// REM Functions
+@function rem($size) {
+    $remSize: $size / 16px;
+    @return ($remSize) * 1rem;
+}
+
+// EM Functions
+@function em($pixels, $context: 16px) {
+    @return ($pixels/$context) * 1em;
+}
+
+// @function triangle($size, $direction) {
+//     $width-height: $size / 2;
+//     $color: currentColor;
+
+//     @if $direction =='up' {
+//         @return (border-left: $width-height solid transparent,
+//             border-right: $width-height solid transparent,
+//             border-bottom: $size solid $color );
+//     }
+
+//     @else if $direction =='down' {
+//         @return (border-left: $width-height solid transparent,
+//             border-right: $width-height solid transparent,
+//             border-top: $size solid $color );
+//     }
+
+//     @else if $direction =='left' {
+//         @return (border-top: $width-height solid transparent,
+//             border-bottom: $width-height solid transparent,
+//             border-right: $size solid $color );
+//     }
+
+//     @else if $direction =='right' {
+//         @return (border-top: $width-height solid transparent,
+//             border-bottom: $width-height solid transparent,
+//             border-left: $size solid $color );
+//     }
+// }
+
+// @function linear-gradient($direction, $color-stops...) {
+//     $gradient: ();
+
+//     @each $stop in $color-stops {
+//         $gradient: append($gradient, $stop, comma);
+//     }
+
+//     @return linear-gradient($direction, $gradient);
+// }
