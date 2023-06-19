@@ -56,7 +56,6 @@ const Home = () => {
 
 	// const ordinalNo = Math.max(...tableData.data.map((d) => +d.ordinalNo), 0) + 1 //TODO add column
 	const handleAddData = (newData) => {
-		console.log(`newData:`, newData)
 		setTableData((prevTableData) => {
 			const newTableData = {
 				...prevTableData,
