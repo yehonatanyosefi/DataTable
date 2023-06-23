@@ -1,7 +1,5 @@
 import { useState } from 'react'
-import Modal from 'react-modal'
-
-Modal.setAppElement('#root')
+import Modal from './util/Modal'
 
 export default function AddDataForm({ isOpen, onRequestClose, onAddData }) {
 	const [newData, setNewData] = useState({

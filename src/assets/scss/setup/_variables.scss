@@ -1,21 +1,19 @@
 // Colors
-$primary-color: #0F4C81;
-$secondary-color: #1C7C9C;
-$accent-color: #F2C94C;
-$success-color: #27AE60;
-$error-color: #EB5757;
-$card-background-color: #2D2D2D;
-$text-light-color: #9A9A9A;
-$border-color: #3F3F3F;
+$primary-color: #0f4c81;
+$secondary-color: #1c7c9c;
+$accent-color: #f2c94c;
+$success-color: #27ae60;
+$error-color: #eb5757;
+$card-background-color: #2d2d2d;
+$text-light-color: #9a9a9a;
+$border-color: #3f3f3f;
 
 // Typography
-$font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+$font-family: SourceSansPro-Regular, sans-serif;
 $font-size-base: 16px;
 
 // Spacing
 $spacing-unit: 1rem;
-
-$navHeight: 65px;
 
 // Breakpoints
 $mobile-breakpoint: 600px;
@@ -34,3 +32,5 @@ $success-clr: #38b76a;
 $white-font-clr: #fcfcfe;
 $input-radius: rem(6px);
 $input-padding: em(15px) em(28px);
+
+$scrollbar-width: 8px;

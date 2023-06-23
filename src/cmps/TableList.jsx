@@ -1,24 +1,17 @@
 import { useState, useEffect, useCallback } from 'react'
 
-export default function TableList({ tableData, handleTableDataChange, handleColWidthChange }) {
+export default function TableList({
+	tableData,
+	handleTableDataChange,
+	handleColWidthChange,
+	hiddenColumns,
+	colWidths,
+	setColWidths,
+}) {
 	const [rowData, setRowData] = useState([])
-	const [colWidths, setColWidths] = useState(
-		tableData.columns.reduce((acc, col) => ({ ...acc, [col.id]: col.width }), {})
-	)
-	const [hiddenColumns, setHiddenColumns] = useState([])
 	const [dragging, setDragging] = useState({ columnId: null, startX: 0 })
 	const [sortField, setSortField] = useState(null)
 	const [sortOrder, setSortOrder] = useState(null) // 'asc' or 'desc'
-
-	const handleToggleColumnVisibility = useCallback((columnId) => {
-		setHiddenColumns((prevHiddenColumns) => {
-			if (prevHiddenColumns.includes(columnId)) {
-				return prevHiddenColumns.filter((id) => id !== columnId)
-			} else {
-				return [...prevHiddenColumns, columnId]
-			}
-		})
-	}, [])
 
 	const handleSortChange = useCallback(
 		(columnId) => {
@@ -39,10 +32,10 @@ export default function TableList({ tableData, handleTableDataChange, handleColW
 		setDragging({ columnId, startX: e.pageX })
 	}, [])
 
-	const handleInputChange = useCallback((e, rowId, columnId) => {
-		const value = e.target.value
+	const handleInputChange = useCallback((e, rowId, columnId, type) => {
+		const value = type === 'boolean' ? e.target.checked : e.target.value
 		setRowData((prevState) => {
-			return prevState.map((row) => {
+			const newRowData = prevState.map((row) => {
 				if (row.id === rowId) {
 					return {
 						...row,
@@ -52,10 +45,17 @@ export default function TableList({ tableData, handleTableDataChange, handleColW
 					return row
 				}
 			})
+			if (type === 'boolean') {
+				handleTableDataChange({
+					...tableData,
+					data: newRowData,
+				})
+			}
+			return newRowData
 		})
 	}, [])
 
-	const handleBlur = useCallback(() => {
+	const handleSave = useCallback(() => {
 		handleTableDataChange({
 			...tableData,
 			data: rowData,
@@ -95,7 +95,7 @@ export default function TableList({ tableData, handleTableDataChange, handleColW
 			document.body.removeEventListener('mousemove', handleMouseMove)
 			document.body.removeEventListener('mouseup', handleMouseUp)
 		}
-	}, [dragging, colWidths, handleColWidthChange])
+	}, [dragging, colWidths, handleColWidthChange, setColWidths])
 
 	useEffect(() => {
 		setRowData(tableData.data)
@@ -108,12 +108,7 @@ export default function TableList({ tableData, handleTableDataChange, handleColW
 
 	return (
 		<>
-			<ColumnVisibilityDropdown
-				columns={tableData.columns}
-				hiddenColumns={hiddenColumns}
-				onToggleColumnVisibility={handleToggleColumnVisibility}
-			/>
-			<DataGrid
+			<TableGrid
 				tableData={tableData}
 				rowData={rowData}
 				hiddenColumns={hiddenColumns}
@@ -121,41 +116,13 @@ export default function TableList({ tableData, handleTableDataChange, handleColW
 				onMouseDown={handleMouseDown}
 				onSortChange={handleSortChange}
 				onInputChange={handleInputChange}
-				onBlur={handleBlur}
+				onBlur={handleSave}
 			/>
 		</>
 	)
 }
 
-function ColumnVisibilityDropdown({ columns, hiddenColumns, onToggleColumnVisibility }) {
-	const [isOpen, setIsOpen] = useState(false)
-
-	const toggleDropdown = () => setIsOpen(!isOpen)
-
-	const toggleColumnVisibility = (columnId) => {
-		onToggleColumnVisibility(columnId)
-	}
-
-	return (
-		<div className={`dropdown ${isOpen ? 'open' : ''}`}>
-			<button className="dropdown-btn" onClick={toggleDropdown}>
-				Column Visibility
-			</button>
-			<div className="dropdown-content">
-				{columns.map((column) => (
-					<div
-						key={column.id}
-						className={`dropdown-item ${!hiddenColumns.includes(column.id) ? 'active' : ''}`}
-						onClick={() => toggleColumnVisibility(column.id)}>
-						{column.title}
-					</div>
-				))}
-			</div>
-		</div>
-	)
-}
-
-function DataGrid({
+function TableGrid({
 	tableData,
 	rowData,
 	hiddenColumns,
@@ -198,14 +165,24 @@ function DataGrid({
 							.filter((column) => !hiddenColumns.includes(column.id))
 							.map((column) => (
 								<div key={column.id} className="grid-cell">
-									<input
-										className="edit-input"
-										type={column.type}
-										value={row[column.id] || ''}
-										onChange={(e) => onInputChange(e, row.id, column.id)}
-										onBlur={onBlur}
-										title={row[column.id] || ''}
-									/>
+									{column.type === 'boolean' ? (
+										<input
+											className="edit-input"
+											type="checkbox"
+											checked={row[column.id] || false}
+											onChange={(e) => onInputChange(e, row.id, column.id, column.type)}
+											onBlur={onBlur}
+										/>
+									) : (
+										<input
+											className="edit-input"
+											type={column.type}
+											value={row[column.id] || ''}
+											onChange={(e) => onInputChange(e, row.id, column.id, column.type)}
+											onBlur={onBlur}
+											title={row[column.id] || ''}
+										/>
+									)}
 								</div>
 							))}
 					</div>

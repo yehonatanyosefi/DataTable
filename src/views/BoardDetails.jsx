@@ -1,61 +1,30 @@
+import { useState, useEffect, useCallback } from 'react'
 import TableList from '../cmps/TableList'
 import AddDataForm from '../cmps/AddDataForm'
+import ColumnVisibilityDropdown from '../cmps/ColumnVisibilityDropdown'
 import { v4 as uuidv4 } from 'uuid'
-import { useState } from 'react'
-const DEMO_DATA = {
-	columns: [
-		{
-			id: 'name',
-			ordinalNo: 1,
-			title: 'Name',
-			type: 'string',
-			width: 100,
-		},
-		{
-			id: 'age',
-			ordinalNo: 2,
-			title: 'Age',
-			type: 'number',
-			width: 100,
-		},
-		{
-			id: 'email',
-			ordinalNo: 3,
-			title: 'Email',
-			type: 'string',
-			width: 200,
-		},
-	],
-	data: [
-		{
-			id: '101uid',
-			name: 'John Doe',
-			age: 32,
-			email: 'john@example.com',
-		},
-		{
-			id: '102uid',
-			name: 'Jane Doe',
-			age: 28,
-			email: 'jane@example.com',
-		},
-	],
-}
+import { tableService } from '../services/table.service.js'
+
 const BoardDetails = () => {
-	const [tableData, setTableData] = useState(() => {
-		const savedData = localStorage.getItem('tableData')
-		return savedData ? JSON.parse(savedData) : DEMO_DATA
-	})
-
+	const [tableData, setTableData] = useState(null)
 	const [isModalOpen, setModalOpen] = useState(false)
+	const [hiddenColumns, setHiddenColumns] = useState([])
+	const [colWidths, setColWidths] = useState({})
 
-	const saveTableData = (newTableData) => {
-		localStorage.setItem('tableData', JSON.stringify(newTableData))
-	}
+	useEffect(() => {
+		const fetchTableData = async () => {
+			const fetchedTableData = await tableService.query()
+			setTableData(fetchedTableData[0])
+			setColWidths(
+				fetchedTableData[0].columns.reduce((acc, col) => ({ ...acc, [col.id]: col.width }), {})
+			)
+		}
+		fetchTableData()
+	}, [])
 
-	const handleTableDataChange = (newData) => {
+	const handleTableDataChange = async (newData) => {
+		await tableService.put(newData)
 		setTableData(newData)
-		saveTableData(newData)
 	}
 
 	const handleColWidthChange = (columnId, newWidth) => {
@@ -73,37 +42,67 @@ const BoardDetails = () => {
 					}
 				}),
 			}
-			saveTableData(newTableData)
+			handleTableDataChange(newTableData)
 			return newTableData
 		})
+		setColWidths((prev) => ({ ...prev, [columnId]: newWidth }))
 	}
 
-	// const ordinalNo = Math.max(...tableData.data.map((d) => +d.ordinalNo), 0) + 1 //TODO add column
-	const handleAddData = (newData) => {
+	const handleToggleColumnVisibility = useCallback((columnId) => {
+		setHiddenColumns((prevHiddenColumns) => {
+			if (prevHiddenColumns.includes(columnId)) {
+				return prevHiddenColumns.filter((id) => id !== columnId)
+			} else {
+				return [...prevHiddenColumns, columnId]
+			}
+		})
+	}, [])
+
+	const handleAddData = async (newData) => {
+		const newEntry = { id: uuidv4(), ...newData }
+		await tableService.post(newEntry)
 		setTableData((prevTableData) => {
 			const newTableData = {
 				...prevTableData,
-				data: [...prevTableData.data, { id: uuidv4(), ...newData }],
+				data: [...prevTableData.data, newEntry],
 			}
-			localStorage.setItem('tableData', JSON.stringify(newTableData))
 			return newTableData
 		})
 		setModalOpen(false)
 	}
 
+	if (!tableData) {
+		return <div>Loading...</div>
+	}
+
 	return (
-		<div className="App">
-			<button onClick={() => setModalOpen(true)}>Add Data</button>
+		<div className="board-details">
+			<div className="table-header">
+				<button className="add-data-btn" onClick={() => setModalOpen(true)}>
+					Add Data
+				</button>
+				<ColumnVisibilityDropdown
+					columns={tableData.columns}
+					hiddenColumns={hiddenColumns}
+					onToggleColumnVisibility={handleToggleColumnVisibility}
+				/>
+			</div>
 			<TableList
 				tableData={tableData}
 				handleTableDataChange={handleTableDataChange}
 				handleColWidthChange={handleColWidthChange}
+				hiddenColumns={hiddenColumns}
+				colWidths={colWidths}
+				setColWidths={setColWidths}
 			/>
-			<AddDataForm
-				isOpen={isModalOpen}
-				onRequestClose={() => setModalOpen(false)}
-				onAddData={handleAddData}
-			/>
+			{isModalOpen && (
+				<AddDataForm
+					isOpen={isModalOpen}
+					onRequestClose={() => setModalOpen(false)}
+					columns={tableData.columns}
+					onAddData={handleAddData}
+				/>
+			)}
 		</div>
 	)
 }
