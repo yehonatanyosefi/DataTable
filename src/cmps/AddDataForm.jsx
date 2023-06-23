@@ -1,12 +1,17 @@
 import { useState } from 'react'
 import Modal from './util/Modal'
 
+const EMPTY_DATA = {
+	name: '',
+	age: 0,
+	email: '',
+	telephone: '',
+	isFinished: false,
+	activeTasks: 0,
+}
+
 export default function AddDataForm({ isOpen, onRequestClose, onAddData }) {
-	const [newData, setNewData] = useState({
-		name: '',
-		age: '',
-		email: '',
-	})
+	const [newData, setNewData] = useState(EMPTY_DATA)
 
 	const handleChange = (event) => {
 		setNewData({ ...newData, [event.target.name]: event.target.value })
@@ -15,11 +20,7 @@ export default function AddDataForm({ isOpen, onRequestClose, onAddData }) {
 	const handleSubmit = (event) => {
 		event.preventDefault()
 		onAddData(newData)
-		setNewData({
-			name: '',
-			age: '',
-			email: '',
-		})
+		setNewData(EMPTY_DATA)
 	}
 
 	return (

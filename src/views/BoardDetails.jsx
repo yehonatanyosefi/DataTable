@@ -60,12 +60,12 @@ const BoardDetails = () => {
 
 	const handleAddData = async (newData) => {
 		const newEntry = { id: uuidv4(), ...newData }
-		await tableService.post(newEntry)
 		setTableData((prevTableData) => {
 			const newTableData = {
 				...prevTableData,
 				data: [...prevTableData.data, newEntry],
 			}
+			handleTableDataChange(newTableData)
 			return newTableData
 		})
 		setModalOpen(false)
