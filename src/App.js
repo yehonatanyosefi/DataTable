@@ -1,9 +1,9 @@
 import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { lazy, Suspense } from 'react'
-import { HOME } from './services/routes.service'
+import { BOARD_DETAILS, NOT_FOUND } from './services/routes.service'
 import './assets/scss/main.scss'
 // import { useDispatch } from 'react-redux'
-const Home = lazy(() => import('./views/Home'))
+const BoardDetails = lazy(() => import('./views/BoardDetails'))
 const NotFound = lazy(() => import('./views/NotFound'))
 
 export default function App() {
@@ -12,9 +12,9 @@ export default function App() {
 			<Router>
 				<section className="main-app">
 					<Routes>
-						<Route path={HOME} element={<Home />} />
-						<Route path={'/404'} element={<NotFound />} />
-						<Route path="*" element={<Navigate to="/404" replace />} />
+						<Route path={BOARD_DETAILS} element={<BoardDetails />} />
+						<Route path={NOT_FOUND} element={<NotFound />} />
+						<Route path="*" element={<Navigate to={NOT_FOUND} replace />} />
 					</Routes>
 				</section>
 			</Router>

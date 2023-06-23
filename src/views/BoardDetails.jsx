@@ -1,4 +1,4 @@
-import DataTable from '../cmps/DataTable'
+import TableList from '../cmps/TableList'
 import AddDataForm from '../cmps/AddDataForm'
 import { v4 as uuidv4 } from 'uuid'
 import { useState } from 'react'
@@ -41,7 +41,7 @@ const DEMO_DATA = {
 		},
 	],
 }
-const Home = () => {
+const BoardDetails = () => {
 	const [tableData, setTableData] = useState(() => {
 		const savedData = localStorage.getItem('tableData')
 		return savedData ? JSON.parse(savedData) : DEMO_DATA
@@ -94,7 +94,7 @@ const Home = () => {
 	return (
 		<div className="App">
 			<button onClick={() => setModalOpen(true)}>Add Data</button>
-			<DataTable
+			<TableList
 				tableData={tableData}
 				handleTableDataChange={handleTableDataChange}
 				handleColWidthChange={handleColWidthChange}
@@ -108,4 +108,4 @@ const Home = () => {
 	)
 }
 
-export default Home
+export default BoardDetails

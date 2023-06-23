@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 
-export default function DataTable({ tableData, handleTableDataChange, handleColWidthChange }) {
+export default function TableList({ tableData, handleTableDataChange, handleColWidthChange }) {
 	const [rowData, setRowData] = useState([])
 	const [colWidths, setColWidths] = useState(
 		tableData.columns.reduce((acc, col) => ({ ...acc, [col.id]: col.width }), {})
@@ -108,7 +108,7 @@ export default function DataTable({ tableData, handleTableDataChange, handleColW
 
 	return (
 		<>
-			<ControlsPanel
+			<ColumnVisibilityDropdown
 				columns={tableData.columns}
 				hiddenColumns={hiddenColumns}
 				onToggleColumnVisibility={handleToggleColumnVisibility}
@@ -127,20 +127,30 @@ export default function DataTable({ tableData, handleTableDataChange, handleColW
 	)
 }
 
-function ControlsPanel({ columns, hiddenColumns, onToggleColumnVisibility }) {
+function ColumnVisibilityDropdown({ columns, hiddenColumns, onToggleColumnVisibility }) {
+	const [isOpen, setIsOpen] = useState(false)
+
+	const toggleDropdown = () => setIsOpen(!isOpen)
+
+	const toggleColumnVisibility = (columnId) => {
+		onToggleColumnVisibility(columnId)
+	}
+
 	return (
-		<div className="controls-panel">
-			<h3>Column Visibility</h3>
-			{columns.map((column) => (
-				<label key={column.id}>
-					<input
-						type="checkbox"
-						checked={!hiddenColumns.includes(column.id)}
-						onChange={() => onToggleColumnVisibility(column.id)}
-					/>
-					{column.title}
-				</label>
-			))}
+		<div className={`dropdown ${isOpen ? 'open' : ''}`}>
+			<button className="dropdown-btn" onClick={toggleDropdown}>
+				Column Visibility
+			</button>
+			<div className="dropdown-content">
+				{columns.map((column) => (
+					<div
+						key={column.id}
+						className={`dropdown-item ${!hiddenColumns.includes(column.id) ? 'active' : ''}`}
+						onClick={() => toggleColumnVisibility(column.id)}>
+						{column.title}
+					</div>
+				))}
+			</div>
 		</div>
 	)
 }
