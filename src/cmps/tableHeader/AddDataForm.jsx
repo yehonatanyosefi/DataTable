@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import { useState, useEffect } from 'react'
 import Modal from '../util/Modal'
 
@@ -32,41 +33,55 @@ const AddDataForm = ({ isOpen, onRequestClose, onAddData, columns }) => {
 		onAddData(newData)
 		onRequestClose()
 	}
-
 	return (
 		<Modal isOpen={isOpen} onRequestClose={onRequestClose}>
 			{error && <p>{error}</p>}
 			<div className="add-data-form">
-				<h2>Add Data</h2>
-				<form onSubmit={handleSubmit}>
-					{columns.map((column) => (
-						<label key={column.id}>
-							{column.title}:
-							{column.type === 'boolean' ? (
-								<label className="checkbox-container">
+				<h2 id="form-title">Add Data</h2>
+				<form onSubmit={handleSubmit} aria-labelledby="form-title">
+					<div className="columns">
+						{columns.map((column) => (
+							<label key={column.id}>
+								{column.title}:
+								{column.type === 'boolean' ? (
+									<label className="checkbox-container">
+										<input
+											className="hidden-checkbox"
+											type="checkbox"
+											checked={newData[column.id] || false}
+											onChange={(e) => handleChange(e, column, column.type)}
+										/>
+										<span className="custom-checkbox" />
+									</label>
+								) : (
 									<input
-										className="hidden-checkbox"
-										type="checkbox"
-										checked={newData[column.id] || false}
+										type={column.type === 'number' ? 'number' : 'text'}
+										value={newData[column.id] || ''}
 										onChange={(e) => handleChange(e, column, column.type)}
+										required
 									/>
-									<span className="custom-checkbox" />
-								</label>
-							) : (
-								<input
-									type={column.type === 'number' ? 'number' : 'text'}
-									value={newData[column.id] || ''}
-									onChange={(e) => handleChange(e, column, column.type)}
-									required
-								/>
-							)}
-						</label>
-					))}
+								)}
+							</label>
+						))}
+					</div>
 					<button type="submit">Submit</button>
 				</form>
 			</div>
 		</Modal>
 	)
+}
+
+AddDataForm.propTypes = {
+	isOpen: PropTypes.bool.isRequired,
+	onRequestClose: PropTypes.func.isRequired,
+	onAddData: PropTypes.func.isRequired,
+	columns: PropTypes.arrayOf(
+		PropTypes.shape({
+			id: PropTypes.string.isRequired,
+			type: PropTypes.string.isRequired,
+			title: PropTypes.string.isRequired,
+		})
+	).isRequired,
 }
 
 export default AddDataForm

@@ -1,8 +1,13 @@
 import { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { getSvg } from '../../services/svg.service'
 
 const SvgMarkup = ({ markup, ...rest }) => {
 	return <span dangerouslySetInnerHTML={{ __html: markup }} {...rest} />
+}
+
+SvgMarkup.propTypes = {
+	markup: PropTypes.string.isRequired,
 }
 
 const SvgIcon = ({ iconName, ...rest }) => {
@@ -26,4 +31,9 @@ const SvgIcon = ({ iconName, ...rest }) => {
 	}
 	return <SvgMarkup markup={svgMarkup} className="svg-icon" {...rest} />
 }
+
+SvgIcon.propTypes = {
+	iconName: PropTypes.string.isRequired,
+}
+
 export default SvgIcon

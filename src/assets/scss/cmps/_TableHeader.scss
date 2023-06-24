@@ -76,9 +76,18 @@
 		flex-direction: column;
 		width: 100%;
 
+		.columns {
+			max-height: 70vh;
+			max-height: 70dvh;
+			overflow: auto;
+		}
+
 		label {
 			display: flex;
+			justify-content: center;
 			flex-direction: column;
+
+			margin-inline: 0.5em;
 			margin-bottom: 1em;
 
 			&:last-child {
@@ -105,15 +114,8 @@
 		button[type='submit'] {
 			padding: 0.8em 1.6em;
 			border: none;
-			background-color: #3f51b5;
-			color: white;
 			border-radius: 4px;
-			cursor: pointer;
 			transition: background-color 0.3s ease;
-
-			&:hover {
-				background-color: #303f9f;
-			}
 		}
 	}
 }

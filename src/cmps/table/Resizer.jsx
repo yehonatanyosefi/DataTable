@@ -1,6 +1,9 @@
+import PropTypes from 'prop-types'
 function Resizer({ columnId, onMouseDown }) {
 	return (
 		<div
+			className="resizer"
+			title="Resize column"
 			style={{
 				position: 'absolute',
 				top: 0,
@@ -13,4 +16,10 @@ function Resizer({ columnId, onMouseDown }) {
 		/>
 	)
 }
+
+Resizer.propTypes = {
+	columnId: PropTypes.string.isRequired,
+	onMouseDown: PropTypes.func.isRequired,
+}
+
 export default Resizer

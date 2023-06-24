@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import Checkbox from '../dynamicCmps/Checkbox'
 import Input from '../dynamicCmps/Input'
 import DeleteButton from './DeleteButton'
@@ -23,6 +24,17 @@ function GridRow({
 		</div>
 	)
 }
+
+GridRow.propTypes = {
+	row: PropTypes.object.isRequired,
+	tableData: PropTypes.object.isRequired,
+	hiddenColumns: PropTypes.arrayOf(PropTypes.string).isRequired,
+	gridTemplateColumns: PropTypes.string.isRequired,
+	onInputChange: PropTypes.func.isRequired,
+	onBlur: PropTypes.func.isRequired,
+	onDeleteRow: PropTypes.func.isRequired,
+}
+
 export default GridRow
 
 function TableInput({ row, column, onInputChange, onBlur }) {

@@ -1,5 +1,7 @@
+import PropTypes from 'prop-types'
 import Resizer from './Resizer'
 import SortIcon from './SortIcon'
+
 function GridHeader({
 	tableData,
 	hiddenColumns,
@@ -28,4 +30,15 @@ function GridHeader({
 		</div>
 	)
 }
+
+GridHeader.propTypes = {
+	tableData: PropTypes.object.isRequired,
+	hiddenColumns: PropTypes.arrayOf(PropTypes.string).isRequired,
+	gridTemplateColumns: PropTypes.string.isRequired,
+	sortField: PropTypes.string.isRequired,
+	sortOrder: PropTypes.string.isRequired,
+	onSortChange: PropTypes.func.isRequired,
+	onMouseDown: PropTypes.func.isRequired,
+}
+
 export default GridHeader

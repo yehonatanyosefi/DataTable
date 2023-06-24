@@ -91,7 +91,7 @@ const BoardDetails = () => {
 		setTableData((prevTableData) => {
 			const newTableData = {
 				...prevTableData,
-				data: [...prevTableData.data, newEntry],
+				data: [newEntry, ...prevTableData.data],
 			}
 			handleTableDataChange(newTableData)
 			return newTableData
@@ -225,7 +225,11 @@ const BoardDetails = () => {
 
 	return (
 		<div className="board-details">
-			{error && <div className="error">{error}</div>}
+			{error && (
+				<div className="error" role="alert">
+					{error}
+				</div>
+			)}
 			<TableHeader
 				columns={tableData.columns}
 				hiddenColumns={hiddenColumns}
