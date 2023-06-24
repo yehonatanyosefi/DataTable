@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "/ProjectManager/static/css/main.b9f6daf0.css",
+    "main.js": "/ProjectManager/static/js/main.5b2f0dea.js",
+    "static/js/552.be9723f6.chunk.js": "/ProjectManager/static/js/552.be9723f6.chunk.js",
+    "static/js/129.11aa317c.chunk.js": "/ProjectManager/static/js/129.11aa317c.chunk.js",
+    "static/js/787.cc73316b.chunk.js": "/ProjectManager/static/js/787.cc73316b.chunk.js",
+    "static/js/360.462f9d85.chunk.js": "/ProjectManager/static/js/360.462f9d85.chunk.js",
+    "static/media/SourceSansPro-Regular.ttf": "/ProjectManager/static/media/SourceSansPro-Regular.a5357cc4e5d4eeb42793.ttf",
+    "static/media/SourceSansPro-SemiBold.ttf": "/ProjectManager/static/media/SourceSansPro-SemiBold.a8dc1b60c9ad609f0b4a.ttf",
+    "static/media/SourceSansPro-Bold.ttf": "/ProjectManager/static/media/SourceSansPro-Bold.4a6e47d1db848f5e8218.ttf",
+    "index.html": "/ProjectManager/index.html",
+    "main.b9f6daf0.css.map": "/ProjectManager/static/css/main.b9f6daf0.css.map",
+    "main.5b2f0dea.js.map": "/ProjectManager/static/js/main.5b2f0dea.js.map",
+    "552.be9723f6.chunk.js.map": "/ProjectManager/static/js/552.be9723f6.chunk.js.map",
+    "129.11aa317c.chunk.js.map": "/ProjectManager/static/js/129.11aa317c.chunk.js.map",
+    "787.cc73316b.chunk.js.map": "/ProjectManager/static/js/787.cc73316b.chunk.js.map",
+    "360.462f9d85.chunk.js.map": "/ProjectManager/static/js/360.462f9d85.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b9f6daf0.css",
+    "static/js/main.5b2f0dea.js"
+  ]
+}
