@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react'
 import { getSvg } from '../../services/svg.service'
 
 const SvgMarkup = ({ markup, ...rest }) => {
-  return <span dangerouslySetInnerHTML={{ __html: markup }} {...rest} />
+	return <span dangerouslySetInnerHTML={{ __html: markup }} {...rest} />
 }
 
-export const SvgIcon = ({ iconName, ...rest }) => {
+const SvgIcon = ({ iconName, ...rest }) => {
 	const { className } = rest
 	const [svgMarkup, setSvgMarkup] = useState(null)
 
@@ -18,11 +18,12 @@ export const SvgIcon = ({ iconName, ...rest }) => {
 	}, [iconName])
 
 	if (!svgMarkup) {
-		return <span>Loading...</span>
+		return null
 	}
-  if (className) {
-    delete rest.className
-    return <SvgMarkup markup={svgMarkup} className={`svg-icon ${className}`} {...rest} />
-  }
+	if (className) {
+		delete rest.className
+		return <SvgMarkup markup={svgMarkup} className={`svg-icon ${className}`} {...rest} />
+	}
 	return <SvgMarkup markup={svgMarkup} className="svg-icon" {...rest} />
 }
+export default SvgIcon

@@ -1,10 +1,13 @@
 import { useState, useEffect, useCallback } from 'react'
+import SvgIcon from './util/SvgIcon'
 
 export default function TableList({
 	tableData,
 	handleTableDataChange,
 	handleColWidthChange,
+	handleDeleteRow,
 	hiddenColumns,
+	saveData,
 	colWidths,
 	setColWidths,
 }) {
@@ -46,7 +49,7 @@ export default function TableList({
 				}
 			})
 			if (type === 'boolean') {
-				handleTableDataChange({
+				saveData({
 					...tableData,
 					data: newRowData,
 				})
@@ -114,10 +117,13 @@ export default function TableList({
 			rowData={rowData}
 			hiddenColumns={hiddenColumns}
 			gridTemplateColumns={gridTemplateColumns}
+			sortField={sortField}
+			sortOrder={sortOrder}
 			onMouseDown={handleMouseDown}
 			onSortChange={handleSortChange}
 			onInputChange={handleInputChange}
 			onBlur={handleSave}
+			onDeleteRow={handleDeleteRow}
 		/>
 	)
 }
@@ -127,10 +133,13 @@ function TableGrid({
 	rowData,
 	hiddenColumns,
 	gridTemplateColumns,
+	sortField,
+	sortOrder,
 	onMouseDown,
 	onSortChange,
 	onInputChange,
 	onBlur,
+	onDeleteRow,
 }) {
 	return (
 		<div className="data-table">
@@ -138,12 +147,22 @@ function TableGrid({
 				{tableData.columns
 					.filter((column) => !hiddenColumns.includes(column.id))
 					.map((column) => (
-						<div
-							key={column.id}
-							className="grid-cell"
-							style={{ position: 'relative' }}
-							onClick={() => onSortChange(column.id)}>
+						<div key={column.id} className="grid-cell" style={{ position: 'relative' }}>
 							{column.title}
+							{sortField === column.id && (
+								<SvgIcon
+									iconName={sortOrder === 'asc' ? 'chevronUp' : 'chevronDown'}
+									className="sort-icon"
+									onClick={() => onSortChange(column.id)}
+								/>
+							)}
+							{sortField !== column.id && (
+								<SvgIcon
+									iconName="chevronSort"
+									className="sort-icon"
+									onClick={() => onSortChange(column.id)}
+								/>
+							)}
 							<div
 								style={{
 									position: 'absolute',
@@ -161,6 +180,14 @@ function TableGrid({
 			{rowData &&
 				rowData.map((row) => (
 					<div key={row.id} className="grid-row" style={{ gridTemplateColumns }}>
+						<div className="delete-btn-wrapper">
+							<SvgIcon
+								iconName="delete"
+								className="delete-btn"
+								title="Delete Row"
+								onClick={() => onDeleteRow(row.id)}
+							/>
+						</div>
 						{tableData.columns
 							.filter((column) => !hiddenColumns.includes(column.id))
 							.map((column) => (

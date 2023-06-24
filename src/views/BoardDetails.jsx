@@ -28,8 +28,16 @@ const BoardDetails = () => {
 	}, [])
 
 	const handleTableDataChange = async (newData) => {
-		await tableService.put(newData)
+		saveData(newData)
 		setTableData(newData)
+	}
+
+	const saveData = async (newData) => {
+		try {
+			await tableService.put(newData)
+		} catch (err) {
+			setError('Error saving the table data, please try again.')
+		}
 	}
 
 	const handleColWidthChange = (columnId, newWidth) => {
@@ -47,10 +55,21 @@ const BoardDetails = () => {
 					}
 				}),
 			}
-			handleTableDataChange(newTableData)
+			saveData(newTableData)
 			return newTableData
 		})
 		setColWidths((prev) => ({ ...prev, [columnId]: newWidth }))
+	}
+
+	const handleDeleteRow = (rowId) => {
+		setTableData((prevTableData) => {
+			const newTableData = {
+				...prevTableData,
+				data: prevTableData.data.filter((row) => row.id !== rowId),
+			}
+			saveData(newTableData)
+			return newTableData
+		})
 	}
 
 	const handleToggleColumnVisibility = useCallback((columnId) => {
@@ -104,6 +123,8 @@ const BoardDetails = () => {
 				handleTableDataChange={handleTableDataChange}
 				handleColWidthChange={handleColWidthChange}
 				hiddenColumns={hiddenColumns}
+				handleDeleteRow={handleDeleteRow}
+				saveData={saveData}
 				colWidths={colWidths}
 				setColWidths={setColWidths}
 			/>

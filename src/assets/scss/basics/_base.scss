@@ -101,25 +101,29 @@ input {
 	border-radius: em(5px);
 }
 
-// MAC like scrollbar
 ::-webkit-scrollbar {
-	width: $scrollbar-width;
 	background-color: rgba(0, 0, 0, 0);
-	-webkit-border-radius: 100px;
+	width: $scrollbar-width;
 }
 
 ::-webkit-scrollbar:hover {
-	background-color: rgba(0, 0, 0, 0.09);
+	background-color: rgba(0, 0, 0, 0.1);
 }
 
-::-webkit-scrollbar-thumb:vertical {
-	background: rgba(0, 0, 0, 0.5);
-	-webkit-border-radius: 100px;
+::-webkit-scrollbar-thumb {
+	background: linear-gradient(13deg, rgba(67, 89, 120, 0.8) 14%, rgba(90, 106, 132, 0.8) 64%);
+	border-radius: 10px;
+	box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.1), inset -1px -1px 2px rgba(255, 255, 255, 0.03);
 }
 
-::-webkit-scrollbar-thumb:vertical:active {
-	-webkit-border-radius: 100px;
+::-webkit-scrollbar-thumb:active {
+	background: linear-gradient(13deg, rgba(67, 89, 120, 0.6) 14%, rgba(90, 106, 132, 0.6) 64%);
 }
+
+::-webkit-scrollbar-vertical {
+	height: calc($scrollbar-width * 0.5);
+}
+
 .main-app {
 	overflow-x: auto;
 }
