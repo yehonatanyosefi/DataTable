@@ -9,7 +9,6 @@ function Checkbox({ row, column, onInputChange }) {
 				checked={row[column.id] || false}
 				onChange={(e) => onInputChange(e, row.id, column.id, column.type)}
 				aria-checked={row[column.id] || false}
-				role="checkbox"
 			/>
 			<span className="custom-checkbox" />
 		</label>

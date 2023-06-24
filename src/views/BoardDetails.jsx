@@ -1,70 +1,62 @@
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback, useMemo, useRef, lazy, Suspense } from 'react'
 
 import TableList from '../cmps/TableList'
 import TableHeader from '../cmps/TableHeader'
-import AddDataForm from '../cmps/tableHeader/AddDataForm'
 
 import { v4 as uuidv4 } from 'uuid'
 import { tableService } from '../services/table.service.js'
+
 import useThrottle from '../customHooks/useThrottle'
+import useFetchDataTable from '../customHooks/table/useFetchDataTable'
+const AddDataForm = lazy(() => import('../cmps/tableHeader/AddDataForm'))
 
 const PAGE_SIZE = 10
 //TODO: switch to fetching limited data from server, and saving only the limited data if we get a backend
 
 const BoardDetails = () => {
-	const [tableData, setTableData] = useState(null)
 	const [isModalOpen, setModalOpen] = useState(false)
 	const [hiddenColumns, setHiddenColumns] = useState([])
-	const [colWidths, setColWidths] = useState({})
-	const [error, setError] = useState(null)
 	const [page, setPage] = useState(1)
-
 	const [rowData, setRowData] = useState([])
-	const [dragging, setDragging] = useState({ columnId: null, startX: 0 })
 	const [sortField, setSortField] = useState(null)
 	const [sortOrder, setSortOrder] = useState(null) // 'asc' or 'desc'
 
-	const handleSaveData = async (newData) => {
-		try {
-			await tableService.put(newData)
-		} catch (err) {
-			setError('Error saving the table data, please try again.')
-		}
-	}
+	const dragging = useRef({ columnId: null, startX: 0 })
+	const colWidths = useRef({})
 
-	const handleTableDataChange = async (newData) => {
-		handleSaveData(newData)
-		setTableData(newData)
-	}
+	const { tableData, updateTableData, error, setError } = useFetchDataTable(colWidths)
 
-	const handleColWidthChange = (columnId, newWidth) => {
-		setTableData((prevTableData) => {
-			const newTableData = {
-				...prevTableData,
-				columns: prevTableData.columns.map((col) => {
-					if (col.id === columnId) {
-						return {
-							...col,
-							width: newWidth,
+	const handleColWidthChange = useCallback(
+		(columnId, newWidth) => {
+			updateTableData((prevTableData) => {
+				const newTableData = {
+					...prevTableData,
+					columns: prevTableData.columns.map((col) => {
+						if (col.id === columnId) {
+							return {
+								...col,
+								width: newWidth,
+							}
+						} else {
+							return col
 						}
-					} else {
-						return col
-					}
-				}),
-			}
-			handleSaveData(newTableData)
-			return newTableData
-		})
-		setColWidths((prev) => ({ ...prev, [columnId]: newWidth }))
-	}
+					}),
+				}
+				updateTableData(newTableData)
+				return newTableData
+			})
+			colWidths.current = { ...colWidths.current, [columnId]: newWidth }
+		},
+		[updateTableData]
+	)
 
 	const handleDeleteRow = (rowId) => {
-		setTableData((prevTableData) => {
+		updateTableData((prevTableData) => {
 			const newTableData = {
 				...prevTableData,
 				data: prevTableData.data.filter((row) => row.id !== rowId),
 			}
-			handleSaveData(newTableData)
+			updateTableData(newTableData)
 			return newTableData
 		})
 		// Adjust the current page if the last row of the page was deleted
@@ -89,12 +81,12 @@ const BoardDetails = () => {
 
 	const handleAddData = async (newData) => {
 		const newEntry = { id: uuidv4(), ...newData }
-		setTableData((prevTableData) => {
+		updateTableData((prevTableData) => {
 			const newTableData = {
 				...prevTableData,
 				data: [newEntry, ...prevTableData.data],
 			}
-			handleTableDataChange(newTableData)
+			updateTableData(newTableData)
 			return newTableData
 		})
 		setModalOpen(false)
@@ -116,7 +108,7 @@ const BoardDetails = () => {
 
 	const handleMouseDown = useCallback((e, columnId) => {
 		e.stopPropagation()
-		setDragging({ columnId, startX: e.pageX })
+		dragging.current = { columnId, startX: e.pageX }
 	}, [])
 
 	const handleInputChange = useCallback(
@@ -134,7 +126,7 @@ const BoardDetails = () => {
 					}
 				})
 				if (type === 'boolean') {
-					handleSaveData({
+					updateTableData({
 						...tableData,
 						data: newRowData,
 					})
@@ -142,19 +134,19 @@ const BoardDetails = () => {
 				return newRowData
 			})
 		},
-		[handleSaveData, tableData]
+		[updateTableData, tableData]
 	)
 
 	const handleSaveRow = useCallback(() => {
-		handleTableDataChange({
+		updateTableData({
 			...tableData,
 			data: rowData,
 		})
-	}, [tableData, rowData, handleTableDataChange])
+	}, [tableData, rowData, updateTableData])
 
 	const visibleColumns = tableData?.columns.filter((column) => !hiddenColumns.includes(column.id))
 	const gridTemplateColumns = useMemo(() => {
-		return visibleColumns?.map((column) => `${colWidths[column.id] || '240'}px`).join(' ')
+		return visibleColumns?.map((column) => `${colWidths.current[column.id] || '240'}px`).join(' ')
 	}, [visibleColumns, colWidths])
 	const paginatedData = rowData?.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
 
@@ -172,18 +164,19 @@ const BoardDetails = () => {
 	}, [tableData?.data, sortField, sortOrder])
 
 	const handleMouseMove = useThrottle((e) => {
-		if (dragging.columnId) {
-			const deltaX = e.pageX - dragging.startX
-			const newWidth = Math.max(colWidths[dragging.columnId] + deltaX, 100)
-			setColWidths((prev) => ({ ...prev, [dragging.columnId]: newWidth }))
-			setDragging((prev) => ({ ...prev, startX: e.pageX }))
-			handleColWidthChange(dragging.columnId, newWidth)
+		if (dragging.current.columnId) {
+			const deltaX = e.pageX - dragging.current.startX
+			const newWidth = Math.max(colWidths.current[dragging.current.columnId] + deltaX, 100)
+
+			colWidths.current = { ...colWidths.current, [dragging.current.columnId]: newWidth }
+			dragging.current = { ...dragging.current, startX: e.pageX }
+			handleColWidthChange(dragging.current.columnId, newWidth)
 		}
 	}, 100)
 
 	useEffect(() => {
 		const handleMouseUp = () => {
-			setDragging({ columnId: null, startX: 0 })
+			dragging.current = { columnId: null, startX: 0 }
 		}
 
 		document.body.addEventListener('mousemove', handleMouseMove)
@@ -192,7 +185,7 @@ const BoardDetails = () => {
 			document.body.removeEventListener('mousemove', handleMouseMove)
 			window.removeEventListener('mouseup', handleMouseUp)
 		}
-	}, [dragging, colWidths, handleColWidthChange, setColWidths])
+	}, [dragging, colWidths, handleColWidthChange, handleMouseMove])
 
 	useEffect(() => {
 		if (!tableData?.data) return
@@ -203,16 +196,17 @@ const BoardDetails = () => {
 		const fetchTableData = async () => {
 			try {
 				const fetchedTableData = await tableService.query()
-				setTableData(fetchedTableData[0])
-				setColWidths(
-					fetchedTableData[0].columns.reduce((acc, col) => ({ ...acc, [col.id]: col.width }), {})
+				updateTableData(fetchedTableData[0])
+				colWidths.current = fetchedTableData[0].columns.reduce(
+					(acc, col) => ({ ...acc, [col.id]: col.width }),
+					{}
 				)
 			} catch (error) {
 				setError('Error getting the table data, please refresh the page.')
 			}
 		}
 		fetchTableData()
-	}, [])
+	}, [setError, updateTableData])
 
 	if (error) {
 		return <div className="board-details">{error && <div className="error">{error}</div>}</div>
@@ -255,12 +249,14 @@ const BoardDetails = () => {
 				onInputChange={handleInputChange}
 			/>
 			{isModalOpen && (
-				<AddDataForm
-					isOpen={isModalOpen}
-					onRequestClose={() => setModalOpen(false)}
-					columns={tableData.columns}
-					onAddData={handleAddData}
-				/>
+				<Suspense fallback={<div>Loading...</div>}>
+					<AddDataForm
+						isOpen={isModalOpen}
+						onRequestClose={() => setModalOpen(false)}
+						columns={tableData.columns}
+						onAddData={handleAddData}
+					/>
+				</Suspense>
 			)}
 		</div>
 	)
