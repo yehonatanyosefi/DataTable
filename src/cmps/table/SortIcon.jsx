@@ -13,8 +13,8 @@ function SortIcon({ sortField, sortOrder, columnId, onSortChange }) {
 }
 
 SortIcon.propTypes = {
-	sortField: PropTypes.string.isRequired,
-	sortOrder: PropTypes.string.isRequired,
+	sortField: PropTypes.string,
+	sortOrder: PropTypes.string,
 	columnId: PropTypes.string.isRequired,
 	onSortChange: PropTypes.func.isRequired,
 }

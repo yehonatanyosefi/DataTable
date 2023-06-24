@@ -35,8 +35,8 @@ GridHeader.propTypes = {
 	tableData: PropTypes.object.isRequired,
 	hiddenColumns: PropTypes.arrayOf(PropTypes.string).isRequired,
 	gridTemplateColumns: PropTypes.string.isRequired,
-	sortField: PropTypes.string.isRequired,
-	sortOrder: PropTypes.string.isRequired,
+	sortField: PropTypes.string,
+	sortOrder: PropTypes.string,
 	onSortChange: PropTypes.func.isRequired,
 	onMouseDown: PropTypes.func.isRequired,
 }

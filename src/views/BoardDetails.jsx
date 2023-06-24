@@ -9,6 +9,7 @@ import { tableService } from '../services/table.service.js'
 import useThrottle from '../customHooks/useThrottle'
 
 const PAGE_SIZE = 10
+//TODO: switch to fetching limited data from server, and saving only the limited data if we get a backend
 
 const BoardDetails = () => {
 	const [tableData, setTableData] = useState(null)
