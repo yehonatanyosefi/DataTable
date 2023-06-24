@@ -10,14 +10,19 @@ const BoardDetails = () => {
 	const [isModalOpen, setModalOpen] = useState(false)
 	const [hiddenColumns, setHiddenColumns] = useState([])
 	const [colWidths, setColWidths] = useState({})
+	const [error, setError] = useState(null)
 
 	useEffect(() => {
 		const fetchTableData = async () => {
-			const fetchedTableData = await tableService.query()
-			setTableData(fetchedTableData[0])
-			setColWidths(
-				fetchedTableData[0].columns.reduce((acc, col) => ({ ...acc, [col.id]: col.width }), {})
-			)
+			try {
+				const fetchedTableData = await tableService.query()
+				setTableData(fetchedTableData[0])
+				setColWidths(
+					fetchedTableData[0].columns.reduce((acc, col) => ({ ...acc, [col.id]: col.width }), {})
+				)
+			} catch (error) {
+				setError('Error getting the table data, please refresh the page.')
+			}
 		}
 		fetchTableData()
 	}, [])
@@ -71,12 +76,19 @@ const BoardDetails = () => {
 		setModalOpen(false)
 	}
 
-	if (!tableData) {
-		return <div>Loading...</div>
+	if (error) {
+		return <div className="board-details">{error && <div className="error">{error}</div>}</div>
+	} else if (!tableData && !error) {
+		return (
+			<div className="board-details">
+				<div>Loading...</div>
+			</div>
+		)
 	}
 
 	return (
 		<div className="board-details">
+			{error && <div className="error">{error}</div>}
 			<div className="table-header">
 				<button className="add-data-btn" onClick={() => setModalOpen(true)}>
 					Add Data

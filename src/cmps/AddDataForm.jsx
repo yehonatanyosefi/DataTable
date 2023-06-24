@@ -3,6 +3,7 @@ import Modal from './util/Modal'
 
 const AddDataForm = ({ isOpen, onRequestClose, onAddData, columns }) => {
 	const [newData, setNewData] = useState({})
+	const [error, setError] = useState('')
 
 	useEffect(() => {
 		const initialData = {}
@@ -11,40 +12,30 @@ const AddDataForm = ({ isOpen, onRequestClose, onAddData, columns }) => {
 				initialData[column.id] = false
 			} else if (column.type === 'number') {
 				initialData[column.id] = 0
-			} else {
+			} else if (column.type === 'string') {
 				initialData[column.id] = ''
+			} else {
+				initialData[column.id] = null
+				setError('Error: Unknown column type')
 			}
 		})
 		setNewData(initialData)
 	}, [columns])
 
-	const handleChange = (event, columnId, type) => {
+	const handleChange = (event, column, type) => {
 		const value = type === 'boolean' ? event.target.checked : event.target.value
-		setNewData({ ...newData, [columnId]: value })
+		setNewData({ ...newData, [column.id]: value })
 	}
 
 	const handleSubmit = (event) => {
 		event.preventDefault()
-
-		// Form validation
-		for (const [key, value] of Object.entries(newData)) {
-			const column = columns.find((column) => column.id === key)
-			if (column.type === 'string' && value.trim() === '') {
-				alert(`${column.title} is required.`)
-				return
-			}
-			if (column.type === 'number' && isNaN(value)) {
-				alert(`${column.title} must be a number.`)
-				return
-			}
-		}
-
 		onAddData(newData)
 		onRequestClose()
 	}
 
 	return (
 		<Modal isOpen={isOpen} onRequestClose={onRequestClose}>
+			{error && <p>{error}</p>}
 			<div className="add-data-form">
 				<h2>Add Data</h2>
 				<form onSubmit={handleSubmit}>
@@ -55,14 +46,13 @@ const AddDataForm = ({ isOpen, onRequestClose, onAddData, columns }) => {
 								<input
 									type="checkbox"
 									checked={newData[column.id] || false}
-									onChange={(e) => handleChange(e, column.id, column.type)}
-									required
+									onChange={(e) => handleChange(e, column, column.type)}
 								/>
 							) : (
 								<input
 									type={column.type === 'number' ? 'number' : 'text'}
 									value={newData[column.id] || ''}
-									onChange={(e) => handleChange(e, column.id, column.type)}
+									onChange={(e) => handleChange(e, column, column.type)}
 									required
 								/>
 							)}

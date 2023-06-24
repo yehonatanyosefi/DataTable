@@ -11,8 +11,13 @@ export const tableService = {
 }
 
 async function query() {
-	return storageService.query(TABLE_ENDPOINT)
-	// return httpService.get(TABLE_ENDPOINT)
+	try {
+		return storageService.query(TABLE_ENDPOINT)
+		// return httpService.get(TABLE_ENDPOINT)
+	} catch (error) {
+		console.error('Error getting the table data', error)
+		throw error
+	}
 }
 
 async function getById(id) {

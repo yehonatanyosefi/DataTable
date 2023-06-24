@@ -90,10 +90,10 @@ export default function TableList({
 		}
 
 		document.body.addEventListener('mousemove', handleMouseMove)
-		document.body.addEventListener('mouseup', handleMouseUp)
+		window.addEventListener('mouseup', handleMouseUp)
 		return () => {
 			document.body.removeEventListener('mousemove', handleMouseMove)
-			document.body.removeEventListener('mouseup', handleMouseUp)
+			window.removeEventListener('mouseup', handleMouseUp)
 		}
 	}, [dragging, colWidths, handleColWidthChange, setColWidths])
 
@@ -106,19 +106,19 @@ export default function TableList({
 		.map((column) => `${colWidths[column.id] || '240'}px`)
 		.join(' ')
 
+	if (!rowData) return <div>Loading...</div>
+
 	return (
-		<>
-			<TableGrid
-				tableData={tableData}
-				rowData={rowData}
-				hiddenColumns={hiddenColumns}
-				gridTemplateColumns={gridTemplateColumns}
-				onMouseDown={handleMouseDown}
-				onSortChange={handleSortChange}
-				onInputChange={handleInputChange}
-				onBlur={handleSave}
-			/>
-		</>
+		<TableGrid
+			tableData={tableData}
+			rowData={rowData}
+			hiddenColumns={hiddenColumns}
+			gridTemplateColumns={gridTemplateColumns}
+			onMouseDown={handleMouseDown}
+			onSortChange={handleSortChange}
+			onInputChange={handleInputChange}
+			onBlur={handleSave}
+		/>
 	)
 }
 
