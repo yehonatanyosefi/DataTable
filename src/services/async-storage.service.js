@@ -78,7 +78,20 @@ function _createColumn(id, ordinalNo, title, type, width) {
 	}
 }
 
-function _createRowData(id, name, age, email, telephone, isFinished, activeTasks) {
+function _createRowData(
+	id,
+	name,
+	age,
+	email,
+	telephone,
+	isFinished,
+	activeTasks,
+	address,
+	company,
+	position,
+	experience,
+	project
+) {
 	return {
 		id,
 		name,
@@ -87,25 +100,61 @@ function _createRowData(id, name, age, email, telephone, isFinished, activeTasks
 		telephone,
 		isFinished,
 		activeTasks,
+		address,
+		company,
+		position,
+		experience,
+		project,
 	}
 }
 
 function _createDemoBoard() {
 	const columns = [
-		_createColumn('name', 1, 'Name', 'string', 150),
-		_createColumn('age', 2, 'Age', 'number', 100),
+		_createColumn('name', 1, 'Name', 'string', 200),
+		_createColumn('age', 2, 'Age', 'number', 150),
 		_createColumn('email', 3, 'Email', 'string', 200),
-		_createColumn('telephone', 4, 'Telephone', 'string', 100),
-		_createColumn('isFinished', 5, 'Is Finished', 'boolean', 100),
-		_createColumn('activeTasks', 6, 'Active Tasks', 'number', 100),
+		_createColumn('telephone', 4, 'Telephone', 'string', 150),
+		_createColumn('isFinished', 5, 'Is Finished', 'boolean', 150),
+		_createColumn('activeTasks', 6, 'Active Tasks', 'number', 150),
+		_createColumn('address', 7, 'Address', 'string', 250),
+		_createColumn('company', 8, 'Company', 'string', 200),
+		_createColumn('position', 9, 'Position', 'string', 150),
+		_createColumn('experience', 10, 'Experience', 'number', 150),
+		_createColumn('project', 11, 'Project', 'string', 200),
 	]
 
-	const data = [
-		_createRowData('101uid', 'John Doe', 32, 'john@example.com', '054-1234567', true, 3),
-		_createRowData('102uid', 'Jane Doe', 28, 'jane@example.com', '052-1245567', false, 5),
-		_createRowData('103uid', 'David Smith', 45, 'david@example.com', '058-1234567', true, 2),
-		_createRowData('104uid', 'Emily Johnson', 39, 'emily@example.com', '054-1254567', false, 4),
-	]
+	const data = []
+
+	for (let i = 0; i < 50; i++) {
+		let name = `Person ${i}`
+		let age = Math.floor(Math.random() * 60) + 20
+		let email = `person${i}@example.com`
+		let telephone = `05${Math.floor(Math.random() * 10)}-${Math.floor(Math.random() * 10000000)}`
+		let isFinished = Math.random() > 0.5
+		let activeTasks = Math.floor(Math.random() * 10)
+		let address = `Street ${i}, City ${i}`
+		let company = `Company ${i}`
+		let position = `Position ${i}`
+		let experience = Math.floor(Math.random() * 20)
+		let project = `Project ${i}`
+
+		data.push(
+			_createRowData(
+				_makeId(),
+				name,
+				age,
+				email,
+				telephone,
+				isFinished,
+				activeTasks,
+				address,
+				company,
+				position,
+				experience,
+				project
+			)
+		)
+	}
 
 	return {
 		columns,

@@ -1,6 +1,5 @@
 .data-table {
 	display: grid;
-	background-color: #e8e8e8;
 	width: fit-content;
 }
 
@@ -12,7 +11,16 @@
 .grid-header {
 	font-weight: 600;
 	color: #323232;
-	background-color: #f4f5f7;
+	.sort-icon {
+		margin-inline-start: 4px;
+		cursor: pointer;
+	}
+	.grid-cell:first-child {
+		border-top-left-radius: 8px;
+	}
+	.grid-cell:last-child {
+		border-top-right-radius: 8px;
+	}
 }
 
 .grid-row {
@@ -30,12 +38,27 @@
 	.delete-btn {
 		cursor: pointer;
 	}
-	&:hover {
+	@include for-mobile-layout {
 		.delete-btn-wrapper {
-			opacity: 0.5;
-			&:hover {
-				opacity: 1;
+			opacity: 1;
+		}
+	}
+	@include for-normal-layout {
+		&:hover {
+			.delete-btn-wrapper {
+				opacity: 0.5;
+				&:hover {
+					opacity: 1;
+				}
 			}
+		}
+	}
+	&:last-child {
+		.grid-cell:nth-child(2) {
+			border-bottom-left-radius: 8px;
+		}
+		.grid-cell:last-child {
+			border-bottom-right-radius: 8px;
 		}
 	}
 }
@@ -46,8 +69,7 @@
 	padding: 8px;
 	background-color: #ffffff;
 	color: #4b4b4b;
-	display: flex;
-	align-items: center;
+	@include flex-center;
 }
 
 .edit-input {
@@ -68,5 +90,83 @@
 	&:focus {
 		background: #ffffff;
 		box-shadow: 0px 0px 1px #0079bf;
+	}
+}
+.checkbox-container {
+	position: relative;
+}
+
+.hidden-checkbox {
+	border: 0;
+	clip: rect(0 0 0 0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+
+.custom-checkbox {
+	@include flex-center;
+	height: 24px;
+	width: 24px;
+	background-color: #eee;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.hidden-checkbox:checked ~ .custom-checkbox {
+	background-color: #2196f3;
+}
+
+.custom-checkbox:after {
+	content: '';
+	position: absolute;
+	display: none;
+}
+
+.hidden-checkbox:checked ~ .custom-checkbox:after {
+	display: block;
+}
+
+.checkbox-container .custom-checkbox:after {
+	left: 9px;
+	top: 5px;
+	width: 5px;
+	height: 10px;
+	border: solid white;
+	border-width: 0 3px 3px 0;
+	transform: rotate(45deg);
+}
+.pagination {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 10px;
+	margin-top: 20px;
+	position: sticky;
+	left: 0;
+
+	button {
+		padding: 10px;
+		margin: 0 10px;
+		cursor: pointer;
+		background: $btn-clr;
+		border: none;
+		color: #fff;
+		transition: background 0.3s;
+		&:disabled {
+			background: #bdbdbd;
+			cursor: not-allowed;
+		}
+		&:not(:disabled):hover {
+			background: $disabled-btn-clr;
+		}
+	}
+
+	span {
+		font-weight: bold;
 	}
 }

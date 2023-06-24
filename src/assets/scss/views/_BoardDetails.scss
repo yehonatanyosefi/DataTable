@@ -1,5 +1,8 @@
 .board-details {
-	padding: 20px 50px;
+	padding: 20px 30px;
+	@include for-wide-layout {
+		padding: 20px 50px;
+	}
 	display: flex;
 	flex-direction: column;
 	gap: 25px;
@@ -9,7 +12,7 @@
 	button {
 		padding: 8px 16px;
 		margin: 2px;
-		background-color: #0079bf;
+		background-color: $btn-clr;
 		color: #ffffff;
 		border: none;
 		border-radius: 4px;
@@ -18,7 +21,7 @@
 		text-transform: uppercase;
 
 		&:hover {
-			background-color: #005680;
+			background-color: $btn-hover-clr;
 		}
 	}
 }

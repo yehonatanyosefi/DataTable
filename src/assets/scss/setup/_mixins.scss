@@ -1,180 +1,155 @@
 /* Breakpoint mixins - Mobile First */
-// @mixin for-narrow-layout {
-//     @media (min-width: $mobile-breakpoint) {
-//         @content;
-//     }
-// }
-
-// @mixin for-normal-layout {
-//     @media (min-width: $narrow-breakpoint) {
-//         @content;
-//     }
-// }
-
-// @mixin for-wide-layout {
-//     @media (min-width: $normal-breakpoint) {
-//         @content;
-//     }
-// }
-
-/* Desktop First */
 @mixin for-mobile-layout {
-    @media (max-width: $mobile-breakpoint) {
-        @content;
-    }
-}
-
-@mixin for-tablet-layout {
-    @media (max-width: $tablet-breakpoint) {
-        @content;
-    }
+	@media (max-width: $mobile-breakpoint) {
+		@content;
+	}
 }
 
 @mixin for-normal-layout {
-    @media (max-width: $normal-breakpoint) {
-        @content;
-    }
+	@media (min-width: $narrow-breakpoint) {
+		@content;
+	}
 }
 
 @mixin for-wide-layout {
-    @media (max-width: $wide-breakpoint) {
-        @content;
-    }
+	@media (min-width: $normal-breakpoint) {
+		@content;
+	}
 }
 
 /* Media  Mixins */
 @mixin aspect-ratio($width, $height) {
-    position: relative;
-    overflow: hidden;
+	position: relative;
+	overflow: hidden;
 
-    &:before {
-        display: block;
-        content: "";
-        width: 100%;
-        padding-top: ($height / $width) * 100%;
-        pointer-events: none;
-    }
+	&:before {
+		display: block;
+		content: '';
+		width: 100%;
+		padding-top: ($height / $width) * 100%;
+		pointer-events: none;
+	}
 
-    &>img,
-    &>iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        height: 100%;
-        width: 100%;
-    }
+	& > img,
+	& > iframe {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		height: 100%;
+		width: 100%;
+	}
 
-    >img {
-        object-fit: cover;
-    }
+	> img {
+		object-fit: cover;
+	}
 }
 
 // Mixin for removing hover effects on iphone screen
 @mixin hover-supported {
-    @media not all and (pointer: coarse) {
-        &:hover {
-            @content;
-        }
-    }
+	@media not all and (pointer: coarse) {
+		&:hover {
+			@content;
+		}
+	}
 }
 
 @mixin quotes {
-    &::before {
-        content: open-quote;
-    }
-    &::after {
-        content: close-quote;
-    }
+	&::before {
+		content: open-quote;
+	}
+	&::after {
+		content: close-quote;
+	}
 }
 
 @mixin absolute-center() {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
 
 @mixin ellipsis($width) {
-    display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: $width;
+	display: block;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: $width;
 }
 
 @mixin hide-text() {
-    font: 0/0 a;
-    color: transparent;
-    text-shadow: none;
-    background-color: transparent;
-    border: 0;
+	font: 0/0 a;
+	color: transparent;
+	text-shadow: none;
+	background-color: transparent;
+	border: 0;
 }
 
 @mixin dark-mode() {
-    @media (prefers-color-scheme: dark) {
-        @content;
-    }
+	@media (prefers-color-scheme: dark) {
+		@content;
+	}
 }
 
 @mixin clean-list() {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+	list-style: none;
+	margin: 0;
+	padding: 0;
 }
 
 @mixin svg-background($svg, $color, $size: auto) {
-    $encoded-svg: url("data:image/svg+xml;charset=UTF-8,#{url-encode($svg)}");
-    background-image: $encoded-svg;
-    background-color: $color;
-    background-size: $size;
+	$encoded-svg: url('data:image/svg+xml;charset=UTF-8,#{url-encode($svg)}');
+	background-image: $encoded-svg;
+	background-color: $color;
+	background-size: $size;
 }
 
 @mixin size($width, $height) {
-    width: $width;
-    height: $height;
+	width: $width;
+	height: $height;
 }
 
 @mixin horizontal-center() {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
 }
 
 @mixin vertical-center() {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
 }
 
 @mixin absolute-center() {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
 
 @mixin fixed-center() {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
 
 @mixin box-shadow {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 @mixin flex-center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 @mixin top-left {
-    position: absolute;
-    top: 0;
-    left: 0;
-    translate: -50% -50%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	translate: -50% -50%;
 }

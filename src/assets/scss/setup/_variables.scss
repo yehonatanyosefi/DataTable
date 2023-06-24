@@ -17,11 +17,11 @@ $spacing-unit: 1rem;
 
 // Breakpoints
 $mobile-breakpoint: 600px;
+$narrow-breakpoint: 768px;
 $tablet-breakpoint: 768px;
 $normal-breakpoint: 900px;
 $wide-breakpoint: 1080px;
 
-$line-clr: turquoise;
 $bg-clr: #fcfcfe;
 $text-clr: #080011;
 $svg-size: 16px;
@@ -35,3 +35,6 @@ $input-padding: em(15px) em(28px);
 
 $scrollbar-width: 5px;
 $cell-height: 50px;
+$btn-clr: #2196f3;
+$disabled-btn-clr: #0079bf;
+$btn-hover-clr: #005680;

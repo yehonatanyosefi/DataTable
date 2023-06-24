@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import useClickOutside from '../customHooks/useClickOutside'
+import useClickOutside from '../../customHooks/useClickOutside'
 
 function ColumnVisibilityDropdown({ columns, hiddenColumns, onToggleColumnVisibility }) {
 	const [isOpen, setIsOpen] = useState(false)

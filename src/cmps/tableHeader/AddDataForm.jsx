@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import Modal from './util/Modal'
+import Modal from '../util/Modal'
 
 const AddDataForm = ({ isOpen, onRequestClose, onAddData, columns }) => {
 	const [newData, setNewData] = useState({})
@@ -43,11 +43,15 @@ const AddDataForm = ({ isOpen, onRequestClose, onAddData, columns }) => {
 						<label key={column.id}>
 							{column.title}:
 							{column.type === 'boolean' ? (
-								<input
-									type="checkbox"
-									checked={newData[column.id] || false}
-									onChange={(e) => handleChange(e, column, column.type)}
-								/>
+								<label className="checkbox-container">
+									<input
+										className="hidden-checkbox"
+										type="checkbox"
+										checked={newData[column.id] || false}
+										onChange={(e) => handleChange(e, column, column.type)}
+									/>
+									<span className="custom-checkbox" />
+								</label>
 							) : (
 								<input
 									type={column.type === 'number' ? 'number' : 'text'}
