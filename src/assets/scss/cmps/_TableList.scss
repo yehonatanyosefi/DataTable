@@ -12,7 +12,7 @@
 	font-weight: 600;
 	color: #323232;
 	.sort-icon {
-		margin-inline-start: 4px;
+		margin-inline-start: rem(4px);
 		cursor: pointer;
 	}
 	.resizer {
@@ -21,10 +21,10 @@
 		}
 	}
 	.grid-cell:first-child {
-		border-top-left-radius: 8px;
+		border-top-left-radius: rem(8px);
 	}
 	.grid-cell:last-child {
-		border-top-right-radius: 8px;
+		border-top-right-radius: rem(8px);
 	}
 }
 
@@ -35,8 +35,8 @@
 		position: absolute;
 		top: 50%;
 		translate: 0 -50%;
-		left: -30px;
-		width: 30px;
+		left: rem(-30px);
+		width: rem(30px);
 		height: $cell-height;
 		@include flex-center;
 	}
@@ -60,10 +60,10 @@
 	}
 	&:last-child {
 		.grid-cell:nth-child(2) {
-			border-bottom-left-radius: 8px;
+			border-bottom-left-radius: rem(8px);
 		}
 		.grid-cell:last-child {
-			border-bottom-right-radius: 8px;
+			border-bottom-right-radius: rem(8px);
 		}
 	}
 }
@@ -71,7 +71,7 @@
 .grid-cell {
 	height: $cell-height;
 	border: 1px solid #ddd;
-	padding: 8px;
+	padding: rem(8px);
 	background-color: #ffffff;
 	color: #4b4b4b;
 	@include flex-center;
@@ -81,7 +81,7 @@
 	border: none;
 	background: none;
 	width: 100%;
-	padding: 8px;
+	padding: rem(8px);
 	outline: none;
 	color: #4b4b4b;
 	white-space: nowrap;
@@ -110,15 +110,15 @@
 	padding: 0;
 	position: absolute;
 	white-space: nowrap;
-	width: 1px;
+	width: rem(1px);
 }
 
 .custom-checkbox {
 	@include flex-center;
-	height: 24px;
-	width: 24px;
+	height: rem(24px);
+	width: rem(24px);
 	background-color: #eee;
-	border-radius: 4px;
+	border-radius: rem(4px);
 	cursor: pointer;
 }
 
@@ -149,14 +149,14 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	padding: 10px;
-	margin-top: 20px;
+	padding: rem(10px);
+	margin-top: rem(20px);
 	position: sticky;
 	left: 0;
 
 	button {
-		padding: 10px;
-		margin: 0 10px;
+		padding: rem(10px);
+		margin: 0 rem(10px);
 		cursor: pointer;
 		background: $btn-clr;
 		border: none;
