@@ -7,13 +7,14 @@ import { v4 as uuidv4 } from 'uuid'
 import { tableService } from '../services/table.service.js'
 
 import useThrottle from '../customHooks/useThrottle'
-import useFetchDataTable from '../customHooks/table/useFetchDataTable'
 const AddDataForm = lazy(() => import('../cmps/tableHeader/AddDataForm'))
 
 const PAGE_SIZE = 10
 //TODO: switch to fetching limited data from server, and saving only the limited data if we get a backend
 
 const BoardDetails = () => {
+	const [tableData, setTableData] = useState(null)
+	const [error, setError] = useState(null)
 	const [isModalOpen, setModalOpen] = useState(false)
 	const [hiddenColumns, setHiddenColumns] = useState([])
 	const [page, setPage] = useState(1)
@@ -24,11 +25,41 @@ const BoardDetails = () => {
 	const dragging = useRef({ columnId: null, startX: 0 })
 	const colWidths = useRef({})
 
-	const { tableData, updateTableData, error, setError } = useFetchDataTable(colWidths)
+	useEffect(() => {
+		const fetchTableData = async () => {
+			try {
+				const fetchedTableData = await tableService.query()
+				setTableData(fetchedTableData[0])
+				colWidths.current = fetchedTableData[0].columns.reduce(
+					(acc, col) => ({ ...acc, [col.id]: col.width }),
+					{}
+				)
+			} catch (error) {
+				setError('Error getting the table data, please refresh the page.')
+			}
+		}
+		fetchTableData()
+	}, [colWidths])
+
+	const saveTableData = useCallback(async (newData) => {
+		try {
+			await tableService.put(newData)
+		} catch (err) {
+			setError('Error saving the table data, please try again.')
+		}
+	}, [])
+
+	const updateTableData = useCallback(
+		async (newData) => {
+			setTableData(newData)
+			saveTableData(newData)
+		},
+		[saveTableData]
+	)
 
 	const handleColWidthChange = useCallback(
 		(columnId, newWidth) => {
-			updateTableData((prevTableData) => {
+			setTableData((prevTableData) => {
 				const newTableData = {
 					...prevTableData,
 					columns: prevTableData.columns.map((col) => {
@@ -42,21 +73,21 @@ const BoardDetails = () => {
 						}
 					}),
 				}
-				updateTableData(newTableData)
+				saveTableData(newTableData)
 				return newTableData
 			})
 			colWidths.current = { ...colWidths.current, [columnId]: newWidth }
 		},
-		[updateTableData]
+		[saveTableData]
 	)
 
 	const handleDeleteRow = (rowId) => {
-		updateTableData((prevTableData) => {
+		setTableData((prevTableData) => {
 			const newTableData = {
 				...prevTableData,
 				data: prevTableData.data.filter((row) => row.id !== rowId),
 			}
-			updateTableData(newTableData)
+			saveTableData(newTableData)
 			return newTableData
 		})
 		// Adjust the current page if the last row of the page was deleted
@@ -81,12 +112,12 @@ const BoardDetails = () => {
 
 	const handleAddData = async (newData) => {
 		const newEntry = { id: uuidv4(), ...newData }
-		updateTableData((prevTableData) => {
+		setTableData((prevTableData) => {
 			const newTableData = {
 				...prevTableData,
 				data: [newEntry, ...prevTableData.data],
 			}
-			updateTableData(newTableData)
+			saveTableData(newTableData)
 			return newTableData
 		})
 		setModalOpen(false)
