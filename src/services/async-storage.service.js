@@ -101,10 +101,10 @@ function _createDemoBoard() {
 	]
 
 	const data = [
-		_createRowData('101uid', 'John Doe', 32, 'john@example.com', '+123456789', true, 3),
-		_createRowData('102uid', 'Jane Doe', 28, 'jane@example.com', '+987654321', false, 5),
-		_createRowData('103uid', 'David Smith', 45, 'david@example.com', '+123123123', true, 2),
-		_createRowData('104uid', 'Emily Johnson', 39, 'emily@example.com', '+789789789', false, 4),
+		_createRowData('101uid', 'John Doe', 32, 'john@example.com', '054-1234567', true, 3),
+		_createRowData('102uid', 'Jane Doe', 28, 'jane@example.com', '052-1245567', false, 5),
+		_createRowData('103uid', 'David Smith', 45, 'david@example.com', '058-1234567', true, 2),
+		_createRowData('104uid', 'Emily Johnson', 39, 'emily@example.com', '054-1254567', false, 4),
 	]
 
 	return {
