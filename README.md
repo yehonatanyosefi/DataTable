@@ -1,3 +1,3 @@
 ﻿#Project Manager
 
-A repo for an interview project for Cemento
+A simple excercise to manage data in a visual way
